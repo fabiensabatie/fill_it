@@ -5,35 +5,20 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: fsabatie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/11/16 15:18:41 by fsabatie          #+#    #+#             */
-/*   Updated: 2017/11/16 15:18:42 by fsabatie         ###   ########.fr       */
+/*   Created: 2017/11/19 16:16:21 by fsabatie          #+#    #+#             */
+/*   Updated: 2017/11/19 16:16:22 by fsabatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fill_it.h"
-#include <string.h>
+#include "../includes/libft.h"
+#include "../includes/fill_it.h"
 #include <stdlib.h>
 
-t_map	*ft_newmap(int size)
+t_map	*ft_newmap(int mapsize)
 {
-	t_map	*map;
-
+	t_map *map;
+	(void)mapsize;
 	if (!(map = (t_map*)malloc(sizeof(t_map))))
 		return (NULL);
-	map->map_size = size;
-	if (!(map->map = (char*)malloc(size / 8 + 1)))
-		return (NULL);
-	return (map);
-}
-
-int		ft_minmapsize(int numberoftetris)
-{
-	int dots;
-	int size;
-
-	size = 0;
-	dots = 4 * numberoftetris;
-	while (size * size < dots)
-		size++;
-	return (size);
+	return (0);
 }

@@ -15,23 +15,23 @@
 # include "libft.h"
 # define BUFF_SIZE 21
 
-typedef struct	s_etrimino
+typedef	struct			s_etrimino
 {
-	short int	c_tet;
-	char		letter;
-}				t_etrimino;
+	char				**tetrimino;
+	char				letter;
+	struct	s_etrimino	*next;
+}						t_etrimino;
 
-typedef struct	s_map
+typedef struct			s_map
 {
-	int			map_size;
-	char		*map;
-}				t_map;
+	char				**map;
+	int					last_x;
+	int					last_y;
+}						t_map;
 
-t_map			*ft_newmap(int size);
-t_etrimino		*ft_newtetri(char *tet);
-t_list			*ft_read_entry(const char *filename, t_map* map);
-void			ft_printbytetetri(t_etrimino *tet);
-void			ft_check_tetri(short int tet);
-int				ft_minmapsize(int numberoftetris);
+t_etrimino	*ft_read_entry(const char *filename);
+t_etrimino	*ft_newtetri(char **tab, char letter);
+void		ft_print_tetri(t_etrimino *tet);
+void		ft_set_tetri(char **tab);
 
 #endif

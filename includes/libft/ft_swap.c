@@ -1,28 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fill_it.c                                          :+:      :+:    :+:   */
+/*   ft_swap.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fsabatie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/11/19 16:15:46 by fsabatie          #+#    #+#             */
-/*   Updated: 2017/11/19 16:15:47 by fsabatie         ###   ########.fr       */
+/*   Created: 2017/11/19 19:33:40 by fsabatie          #+#    #+#             */
+/*   Updated: 2017/11/19 19:33:41 by fsabatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/libft.h"
-#include "../includes/fill_it.h"
+void	ft_swap(char *c1, char *c2)
+{
+	char tmp;
 
-int main(int argc, char const *argv[]) {
-	t_etrimino	*tetriminos;
-
-	if (argc != 2)
-		ft_putnexit("usage : ./fillit map");
-	tetriminos = ft_read_entry(argv[1]);
-	while (tetriminos->next)
-	{
-		ft_print_tetri(tetriminos);
-		tetriminos = tetriminos->next;
-	}
-	return 0;
+	tmp = *c1;
+	*c1 = *c2;
+	*c2 = tmp;
 }

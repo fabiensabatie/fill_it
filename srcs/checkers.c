@@ -1,108 +1,99 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_checkers.c                                      :+:      :+:    :+:   */
+/*   checkers.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fsabatie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/11/11 13:03:58 by fsabatie          #+#    #+#             */
-/*   Updated: 2017/11/11 13:03:59 by fsabatie         ###   ########.fr       */
+/*   Created: 2017/11/19 16:15:51 by fsabatie          #+#    #+#             */
+/*   Updated: 2017/11/19 16:15:54 by fsabatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../includes/libft.h"
+#include "../includes/fill_it.h"
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/uio.h>
-#include <stdlib.h>
 #include <unistd.h>
-#include "fill_it.h"
-#include "libft.h"
 #include <stdio.h>
 
-/*
-** Checks if the tetriminos are valid.
-*/
-
-void			ft_check_tetri(short int tet)
+static char		**ft_check_conn(char **tetri)
 {
-	int	i;
-	int connections;
+	int i;
+	int y;
+	int conn;
 
-	i = 15;
-	connections = 0;
-	while (i > 0)
+	conn = 0;
+	i = 0;
+	while (tetri[i])
 	{
-		if (tet & 1 << i)
+		y = 0;
+		while (tetri[i][y])
 		{
-			if ((tet & 1 << (i - 1)) && (i % 4))
-				connections++;
-			if ((i > 3) && tet & 1 << (i - 4))
-				connections++;
+			if (y < 3 && tetri[i][y] == '#')
+				if (tetri[i][y + 1] == '#')
+					conn++;
+			if (i < 3 && tetri[i][y] == '#')
+				if (tetri[i + 1][y] == '#')
+					conn++;
+			y++;
 		}
-		i--;
+		i++;
 	}
-	if (connections != 4 && connections != 3)
+	if (conn != 3 && conn != 4)
 		ft_putnexit("error");
+	return  (tetri);
 }
 
-/*
-** Checks if the maps are valid.
-*/
-
-static	void	ft_check_if_valid(char *tetri)
+static void		ft_is_valid(char *tetri)
 {
-	short n;
-	short i;
+	int i;
+	int blocs;
+	int conn;
 
-	n = 4;
 	i = 0;
-	tetri[BUFF_SIZE - 1] = 0;
-	if (tetri[i] != '#' && tetri[i++] != '.')
+	blocs = 0;
+	conn = 0;
+	if (tetri[4] != '\n' || tetri[9] != '\n'
+	|| tetri[14] != '\n' || tetri[19] != '\n')
 		ft_putnexit("error");
 	while (tetri[i])
 	{
-		if (i == n)
-		{
-			if (tetri[i] != '\n')
-				ft_putnexit("error");
-			else
-				n += 5;
-			i++;
-		}
-		if (tetri[i] != '#' && tetri[i] != '.' && tetri[i] != '\0')
+		if (!(tetri[i] == '#' || tetri[i] == '\n' || tetri[i] == '.'))
 			ft_putnexit("error");
+		if (tetri[i] == '#')
+			blocs++;
 		i++;
 	}
-	ft_strtrim(tetri);
-	if (ft_strlen(tetri) != 20)
+	if (blocs != 4)
 		ft_putnexit("error");
 }
 
-/*
-** Opens, read, and returns the file passed as an argument.
-*/
-
-t_list			*ft_read_entry(const char *filename, t_map *map)
+t_etrimino		*ft_read_entry(const char *filename)
 {
-	int		fd;
-	char	*tab;
-	t_list	*list;
-	t_list	*last;
+	t_etrimino	*tetri;
+	t_etrimino	*start;
+	char		*buffer;
+	char		letter;
+	int			fd;
 
-	list = ft_lstnew(NULL, sizeof(t_etrimino*));
-	last = list;
-	tab = ft_memalloc(BUFF_SIZE + 1);
+	letter = 'A';
 	if (!(fd = open(filename, O_RDONLY)))
 		ft_putnexit("error");
-	while (read(fd, tab, BUFF_SIZE))
+	if (!(tetri = ft_newtetri(&buffer, letter)))
+		ft_putnexit("error");
+	if (!(buffer = ft_strnew(BUFF_SIZE)))
+		ft_putnexit("error");
+	start = tetri;
+	while (read(fd, buffer, BUFF_SIZE))
 	{
-		map->map_size++;
-		ft_check_if_valid(tab);
-		last->content = ft_newtetri(ft_strtrim(tab));
-		last->next = ft_lstnew(NULL, sizeof(t_etrimino*));
-		last = last->next;
-		ft_bzero(tab, BUFF_SIZE);
+		ft_is_valid(buffer);
+		tetri->tetrimino = ft_check_conn(ft_strsplit(buffer, '\n'));
+		ft_set_tetri(tetri->tetrimino);
+		if (!(tetri->next = ft_newtetri(&buffer, letter++)))
+			return (NULL);
+		tetri = tetri->next;
 	}
-	map->map_size = ft_minmapsize(map->map_size);
-	return (list);
+	return (start);
 }

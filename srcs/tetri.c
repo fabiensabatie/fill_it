@@ -1,85 +1,81 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_tetri.c                                         :+:      :+:    :+:   */
+/*   tetri.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fsabatie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/11/12 20:31:49 by fsabatie          #+#    #+#             */
-/*   Updated: 2017/11/12 20:31:52 by fsabatie         ###   ########.fr       */
+/*   Created: 2017/11/19 16:16:27 by fsabatie          #+#    #+#             */
+/*   Updated: 2017/11/19 16:16:28 by fsabatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "fill_it.h"
+#include "../includes/libft.h"
+#include "../includes/fill_it.h"
 #include <stdlib.h>
 #include <stdio.h>
 
-/*
-** Converts the char* string from input to a byte.
-*/
-
-static	short	int	ft_strtobyte(char *str)
+t_etrimino	*ft_newtetri(char **tab, char letter)
 {
-	char		tet[BUFF_SIZE + 1];
-	short	int i;
-	short	int c;
-	short	int n;
-	short	int hash;
+	t_etrimino *tet;
 
-	hash = 0;
-	c = 0;
-	n = 0;
-	i = 15;
-	ft_strcpy(tet, str);
-	while (n < (short)ft_strlen(tet))
-	{
-		if (tet[n] == '#')
-		{
-			hash++;
-			c = c | (1 << i);
-		}
-		if (tet[n] == '.' || tet[n] == '#')
-			i--;
-		n++;
-	}
-	if (hash != 4)
-		ft_putnexit("error");
-	return (c);
+	if (!(tet = (t_etrimino*)malloc(sizeof(t_etrimino))))
+		return (NULL);
+	tet->tetrimino = tab;
+	tet->letter = letter;
+	tet->next = NULL;
+	return (tet);
 }
 
-/*
-** Print bits of tetri.
-*/
-
-void				ft_printbytetetri(t_etrimino *tet)
+void		ft_print_tetri(t_etrimino *tet)
 {
-	short int i;
-	short int c;
+	char **tetri;
+
+	tetri = tet->tetrimino;
+	while (*tetri)
+		ft_putendl(*tetri++);
+	ft_putendl("");
+}
+
+static int	*ft_get_space(char **tab, int x, int y)
+{
+	int *space;
+
+	space = (int *)malloc(sizeof(int) * 2);
+	space[0] = x;
+	space[1] = y;
+
+	while (space[1] < 4)
+	{
+		space[0] = 0;
+		while (space[0] < 4)
+		{
+			if (tab[space[1]][space[0]] == '#')
+				return (space);
+			space[0]++;
+		}
+		space[1]++;
+	}
+	return (0);
+}
+
+void		ft_set_tetri(char **tab)
+{
+	int *pos;
+	int i;
+	int y;
 
 	i = 0;
-	c = tet->c_tet;
-	while (i < 16)
+	pos = ft_get_space(tab, 0, 0);
+	while (i < 4)
 	{
-		if (c & 1 << i)
-			ft_putchar(tet->letter);
-		else
-			ft_putchar('.');
+		y = 0;
+		while (y < 4)
+		{
+			if (tab[i][y] == '#')
+				ft_swap(&tab[i][y], &tab[i - pos[1]][y - pos[0]]);
+			y++;
+		}
 		i++;
-		if (!(i % 4) && i > 3)
-			ft_putchar('\n');
 	}
-}
-
-t_etrimino			*ft_newtetri(char *tet)
-{
-	static char let = 'A';
-	t_etrimino	*tetrimino;
-
-	if (!(tetrimino = (t_etrimino*)malloc(sizeof(tetrimino))))
-		return (NULL);
-	tetrimino->c_tet = ft_strtobyte(ft_strrev(tet));
-	tetrimino->letter = let;
-	let++;
-	return (tetrimino);
 }
