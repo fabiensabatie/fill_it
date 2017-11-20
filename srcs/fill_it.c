@@ -25,4 +25,4 @@ int main(int argc, char const *argv[]) {
 		tetriminos = tetriminos->next;
 	}
 	return 0;
-}
+} 
