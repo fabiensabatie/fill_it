@@ -91,9 +91,43 @@ t_etrimino		*ft_read_entry(const char *filename)
 		ft_is_valid(buffer);
 		tetri->tetrimino = ft_check_conn(ft_strsplit(buffer, '\n'));
 		ft_set_tetri(tetri->tetrimino);
-		if (!(tetri->next = ft_newtetri(&buffer, letter++)))
+		letter++;
+		if (!(tetri->next = ft_newtetri(&buffer, letter)))
 			return (NULL);
+		tetri->next->prev = tetri;
 		tetri = tetri->next;
 	}
+	tetri->prev->next = NULL;
 	return (start);
+}
+
+int		ft_check_piece(t_map *map, t_etrimino* tetrimino)
+{
+	char **tet;
+	int y;
+	int i;
+	int lastx;
+	int lasty;
+
+	lastx = map->x;
+	lasty = map->y;
+	tet = tetrimino->tetrimino;
+	i = 0;
+	while (i < 4)
+	{
+		y = 0;
+		while (y < 4)
+		{
+			if (tet[i][y] == '#')
+			{
+				if (i + lasty >= map->map_size || y + lastx >= map->map_size)
+					return (0);
+				if (map->map[lasty + i][lastx + y] != '.')
+					return (0);
+			}
+			y++;
+		}
+		i++;
+	}
+	return (1);
 }
