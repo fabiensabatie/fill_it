@@ -25,6 +25,5 @@ int main(int argc, char const *argv[])
 	tetriminos = ft_read_entry(argv[1]);
 	map = ft_newmap(NULL, ft_minmapsize(tetriminos));
 	ft_solve_map(map, tetriminos, 0, 0);
-	ft_print_map(map);
 	return 0;
 }

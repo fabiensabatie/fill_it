@@ -29,7 +29,7 @@ OBJ_NAME = $(SRC_NAME:.c=.o)
 SRC = $(addprefix $(SRC_PATH)/,$(SRC_NAME))
 LIB = $(addprefix $(INC_PATH)/,$(LIB_PATH))
 LIBGCC = $(addprefix $(LIB)/,$(LIB_NAME))
-CPPFLAGS = -Wall -Werror -Wextra
+CPPFLAGS = -Wall -Werror -Wextra -g
 
 # Defining colors
 

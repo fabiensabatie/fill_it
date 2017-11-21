@@ -80,7 +80,16 @@ static int	ft_change_free(t_map *map)
 
 int		ft_solve_map(t_map *map, t_etrimino *tetriminos, int x, int y)
 {
-//	printf("First tetri is %c\n", tetriminos->letter);
+	if (x == 0 || y == 0)
+	{
+		x = 0;
+		y = 0;
+	}
+	ft_putstr("Back from else\n");
+	ft_putnbr(x);
+	ft_putchar(' ');
+	ft_putnbr(y);
+	ft_putchar('\n');
 	map->x = x;
 	map->y = y;
 	t_etrimino *start;
@@ -91,27 +100,35 @@ int		ft_solve_map(t_map *map, t_etrimino *tetriminos, int x, int y)
 
 		while (!ft_check_piece(map, tetriminos))
 		{
-			//printf("Trying to put %c in map[%i][%i]\n", tetriminos->letter,  map->y, map->x);
 			if (!ft_change_free(map))
 			{
 				if (tetriminos->letter == 'A')
 				{
-					//printf("Reached end of map, resizing the map\n");
+					ft_putstr("\nRes\n\n");
 					return ft_solve_map(ft_newmap(map, map->map_size + 1), start, 0, 0);
 				}
 				else
 				{
-					//printf("Reached end of map, removed the tetri %c and\ntrying to change the place of %c\n",tetriminos->prev->letter, tetriminos->prev->letter);
 					ft_rem_tetri(map, tetriminos->prev);
+					//ft_putchar(tetriminos->letter);
+					ft_putchar(' ');
+					ft_putnbr(map->map_size);
+					ft_putchar(' ');
+					ft_putnbr(tetriminos->prev->x);
+					ft_putchar(' ');
+					ft_putnbr(tetriminos->prev->y);
+					ft_putchar('\n');
+					// The segfault comes from the tet-prev-x / y
 					return ft_solve_map(map, tetriminos->prev, tetriminos->prev->x + 1, tetriminos->prev->y);
 				}
 			}
 		}
 		ft_place_tetri(map, tetriminos);
-	//	printf("%c has been put in map[%i][%i]\n", tetriminos->letter, map->y, map->x);
+		//printf("%c has been put in map[%i][%i]\n", tetriminos->letter, map->y, map->x);
 		tetriminos = tetriminos->next;
 		map->x = 0;
 		map->y = 0;
 	}
+	ft_print_map(map);
 	return (1);
 }

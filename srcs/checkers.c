@@ -120,10 +120,19 @@ int		ft_check_piece(t_map *map, t_etrimino* tetrimino)
 		{
 			if (tet[i][y] == '#')
 			{
+				//ft_putstr("3Hre ?\n");
 				if (i + lasty >= map->map_size || y + lastx >= map->map_size)
+				{
+					//ft_putstr("4Hre ?\n");
+					//printf("out of map\n");
 					return (0);
+				}
+				//ft_putstr("5Hre ?\n");
 				if (map->map[lasty + i][lastx + y] != '.')
+				{
+					//printf("Comparing\n");
 					return (0);
+				}
 			}
 			y++;
 		}

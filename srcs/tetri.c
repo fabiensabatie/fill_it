@@ -118,19 +118,18 @@ void 	ft_rem_tetri(t_map *map, t_etrimino *tetrimino)
 {
 	int i;
 	int y;
-	char **toedit;
 
-	toedit = map->map;
 	i = 0;
 	while (i < map->map_size)
 	{
 		y = 0;
 		while (y < map->map_size)
 		{
-			if (toedit[i][y] == tetrimino->letter)
-				toedit[i][y] = '.';
+			if (map->map[i][y] == tetrimino->letter)
+				map->map[i][y] = '.';
 			y++;
 		}
 		i++;
 	}
+	ft_putstr("All good\n");
 }
