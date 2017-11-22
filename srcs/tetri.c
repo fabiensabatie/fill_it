@@ -131,5 +131,7 @@ void 	ft_rem_tetri(t_map *map, t_etrimino *tetrimino)
 		}
 		i++;
 	}
-	ft_putstr("All good\n");
+	ft_putstr("Removed ");
+	ft_putchar(tetrimino->letter);
+	ft_putchar('\n');
 }
