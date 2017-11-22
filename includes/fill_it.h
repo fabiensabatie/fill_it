@@ -44,4 +44,5 @@ int			ft_place_tetri(t_map *map, t_etrimino *tetrimino);
 int			ft_solve_map(t_map *map, t_etrimino *tetriminos, int x, int y);
 void		ft_print_map(t_map *map);
 void 		ft_rem_tetri(t_map *map, t_etrimino *tetrimino);
+void 		list_tetri(t_etrimino *tet);
 #endif

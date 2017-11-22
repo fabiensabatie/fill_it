@@ -95,6 +95,7 @@ t_etrimino		*ft_read_entry(const char *filename)
 		if (!(tetri->next = ft_newtetri(&buffer, letter)))
 			return (NULL);
 		tetri->next->prev = tetri;
+		ft_print_tetri(tetri);
 		tetri = tetri->next;
 	}
 	tetri->prev->next = NULL;
@@ -108,8 +109,9 @@ int		ft_check_piece(t_map *map, t_etrimino* tetrimino)
 	int i;
 	int lastx;
 	int lasty;
-
+	//ft_putstr("2\n");
 	lastx = map->x;
+	//ft_putstr("3\n");
 	lasty = map->y;
 	tet = tetrimino->tetrimino;
 	i = 0;
@@ -138,5 +140,8 @@ int		ft_check_piece(t_map *map, t_etrimino* tetrimino)
 		}
 		i++;
 	}
+	//ft_putstr("4\n");
+	//ft_print_map(map);
+	//ft_putstr("5\n");
 	return (1);
 }

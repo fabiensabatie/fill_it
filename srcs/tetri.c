@@ -38,6 +38,14 @@ void		ft_print_tetri(t_etrimino *tet)
 	ft_putendl("");
 }
 
+void list_tetri(t_etrimino *tet) {
+	while (tet)
+	{
+		ft_print_tetri(tet);
+		tet = tet->next;
+	}
+}
+
 static int	*ft_get_space(char **tab)
 {
 	int *space;
@@ -105,6 +113,7 @@ int		ft_place_tetri(t_map *map, t_etrimino *tetrimino)
 		y = 0;
 		while (y < 4)
 		{
+			//printf("Inserting at map[%i][%i]\n", map->y + i, map->x + y);
 			if (tet[i][y] == '#')
 				map->map[map->y + i][map->x + y] = tetrimino->letter;
 			y++;
@@ -131,7 +140,7 @@ void 	ft_rem_tetri(t_map *map, t_etrimino *tetrimino)
 		}
 		i++;
 	}
-	ft_putstr("Removed ");
-	ft_putchar(tetrimino->letter);
-	ft_putchar('\n');
+	//ft_putstr("Removed ");
+//	ft_putchar(tetrimino->letter);
+	//ft_putchar('\n');
 }

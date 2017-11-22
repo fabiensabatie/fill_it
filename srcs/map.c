@@ -22,7 +22,7 @@ t_map	*ft_newmap(t_map *prev_map, int mapsize)
 
 	i = 0;
 	if (prev_map)
-		free(prev_map);
+		(void)prev_map;
 	if (!(map = (t_map*)malloc(sizeof(t_map))))
 		return (NULL);
 	if (!(map->map = (char**)malloc(sizeof(char*) * mapsize + 1)))
@@ -79,21 +79,21 @@ void		ft_print_map(t_map *map)
 
 static int	ft_change_free(t_map *map)
 {
-	ft_putstr("Trying to change the free from ");
+	/*ft_putstr("Trying to change the free from ");
 	ft_putnbr(map->x);
 	ft_putchar(' ');
 	ft_putnbr(map->y);
-	ft_putstr(" to ");
+	ft_putstr(" to ");*/
 	map->x++;
 	if (map->x % map->map_size == 0)
 	{
 		map->x = 0;
 		map->y++;
 	}
-	ft_putnbr(map->x);
+	/*ft_putnbr(map->x);
 	ft_putchar(' ');
 	ft_putnbr(map->y);
-	ft_putchar('\n');
+	ft_putchar('\n');*/
 	if (map->y >= map->map_size || map->x == map->map_size)
 		return (0);
 	return (1);
@@ -102,67 +102,82 @@ static int	ft_change_free(t_map *map)
 
 int		ft_solve_map(t_map *map, t_etrimino *tetriminos, int x, int y)
 {
+	ft_putstr("0\n");
 	map->x = x;
 	map->y = y;
 	t_etrimino *start;
 
+	ft_putstr("1\n");
+	ft_putchar((char)x);
+	//ft_putendl("");
+	ft_putstr("2\n");
 	start = tetriminos;
 	while (tetriminos)
 	{
+			//ft_putstr("1\n");
+			//ft_print_map(map);
 
-		while (!ft_check_piece(map, tetriminos))
-		{
+			while (!ft_check_piece(map, tetriminos))
+			{
+				//ft_putstr("2\n");
+				//ft_putstr("3\n");
+				//ft_putstr("4\n");
+				//ft_print_map(map);
+				//ft_putstr("5\n");
+				/*ft_putchar(tetriminos->letter);
+				ft_putstr(" doesn't fit in ");
+				ft_putnbr(map->x);
+				ft_putchar(' ');
+				ft_putnbr(map->y);
+				ft_putchar('\n');*/
+				if (!ft_change_free(map))
+				{
+					//ft_putstr("Could not change the free, we reached the end of the map.\n");
+					if (tetriminos->letter == 'A')
+						return ft_solve_map(ft_newmap(map, map->map_size + 1), start, 0, 0);
+					else
+					{
+						//ft_putstr("6\n");
+						//ft_print_map(map);
+						//ft_putstr("7\n");
+						//printf("Currently in %c and about to remove %c\n", tetriminos->letter, tetriminos->prev->letter);
+						//ft_putstr("8\n");
+						ft_rem_tetri(map, tetriminos->prev);
+						//ft_putstr("9\n");
+						/*ft_putstr("About to replace ");
+						ft_putchar(tetriminos->prev->letter);
+						ft_putstr(" from ");
+						ft_putnbr(tetriminos->prev->x);
+						ft_putchar(' ');
+						ft_putnbr(tetriminos->prev->y);
+						ft_putstr(" to ");
+						ft_putnbr(tetriminos->prev->x + 1);
+						ft_putchar(' ');
+						ft_putnbr(tetriminos->prev->y);
+						ft_putchar('\n');
+						ft_putstr("The map size is : ");
+						ft_putnbr(map->map_size);
+						ft_putendl("");
+						ft_putendl("");*/
+						return ft_solve_map(map, tetriminos->prev, tetriminos->prev->x + 1, tetriminos->prev->y);
+					}
+				}
+			}
+			/*ft_putstr("The piece ");
 			ft_putchar(tetriminos->letter);
-			ft_putstr(" doesn't fit in ");
+			ft_putstr(" fits in ");
 			ft_putnbr(map->x);
 			ft_putchar(' ');
 			ft_putnbr(map->y);
-			ft_putchar('\n');
-			if (!ft_change_free(map))
-			{
-				ft_putstr("Could not change the free, we reached the end of the map.\n");
-				if (tetriminos->letter == 'A')
-					return ft_solve_map(ft_newmap(map, map->map_size + 1), start, 0, 0);
-				else
-				{
-					ft_rem_tetri(map, tetriminos->prev);
-					ft_putstr("About to replace ");
-					ft_putchar(tetriminos->prev->letter);
-					ft_putstr(" from ");
-					ft_putnbr(tetriminos->prev->x);
-					ft_putchar(' ');
-					ft_putnbr(tetriminos->prev->y);
-					ft_putstr(" to ");
-					ft_putnbr(tetriminos->prev->x + 1);
-					ft_putchar(' ');
-					ft_putnbr(tetriminos->prev->y);
-					ft_putchar('\n');
-					ft_putstr("The map size is : ");
-					ft_putnbr(map->map_size);
-					ft_putendl("");
-					ft_putendl("");
-					// The segfault comes from the tet-prev-x / y
-					return ft_solve_map(map, tetriminos->prev, tetriminos->prev->x + 1, tetriminos->prev->y);
-				}
-			}
-		}
-		ft_putstr("The piece ");
-		ft_putchar(tetriminos->letter);
-		ft_putstr(" fits in ");
-		ft_putnbr(x);
-		ft_putchar(' ');
-		ft_putnbr(y);
-		ft_putendl("");
-		ft_putendl("");
-		ft_place_tetri(map, tetriminos);
-		//printf("%c has been put in map[%i][%i]\n", tetriminos->letter, map->y, map->x);
-		tetriminos = tetriminos->next;
-		map->x = 0;
-		map->y = 0;
-
-		ft_print_map(map);
-		ft_putendl("");
+			ft_putendl("");
+			ft_putendl("");*/
+			ft_place_tetri(map, tetriminos);
+			//printf("%c has been put in map[%i][%i]\n", tetriminos->letter, map->y, map->x);
+			tetriminos = tetriminos->next;
+			map->x = 0;
+			map->y = 0;
 	}
-
+	//ft_print_map(map);
+	ft_putendl("");
 	return (1);
 }
