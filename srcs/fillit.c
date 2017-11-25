@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "fill_it.h"
-#include "libft.h"
+#include "../includes/libft.h"
 
 void	ft_exit(char const *s)
 {
@@ -23,13 +23,13 @@ void	ft_exit(char const *s)
 
 int		main(int ac, char **av)
 {
-	tetri_list	*list;
-	tetri_list	**ptr_lst;
-	tetri_map	*n_map;
-	tetri_map	*temp;
+	t_etrimino	*list;
+	t_etrimino	**ptr_lst;
+	t_map		*n_map;
+	t_map		*temp;
 
-	if(ac != 2)
-		ft_exit("not valid file number");
+	if (ac != 2)
+		ft_exit("error");
 	list = ft_readfile(av[1]);
 	n_map = new_map(mini_sq(list));
 	ptr_lst = &list;
@@ -41,10 +41,9 @@ int		main(int ac, char **av)
 		{
 			temp = n_map;
 			n_map = new_map(temp->size + 1);
-			free (temp);
+			free(temp);
 		}
-
 	}
-	print_map(n_map->map,n_map->size);
+	print_map(n_map->map, n_map->size);
 	return (0);
 }

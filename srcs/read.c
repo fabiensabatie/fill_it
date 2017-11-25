@@ -17,10 +17,10 @@
 #include <sys/fcntl.h>
 #include <unistd.h>
 #include <string.h>
-#include "libft.h"
+#include "../includes/libft.h"
 #include "fill_it.h"
 
-int		check_fill(char **map, int mpsize, tetri_list *list, int x, int y)
+int			check_fill(t_map *map, t_etrimino *list, int x, int y)
 {
 	int		i;
 	int		j;
@@ -31,9 +31,10 @@ int		check_fill(char **map, int mpsize, tetri_list *list, int x, int y)
 		j = 0;
 		while (j < 4)
 		{
-			if((list->str)[i][j] == '#')
+			if ((list->str)[i][j] == '#')
 			{
-				if (x + i >= mpsize || y + j >= mpsize || map[x + i][y + j] != '.')
+				if (x + i >= map->size || y + j >= map->size
+				|| map->map[x + i][y + j] != '.')
 					return (0);
 			}
 			j++;
@@ -43,7 +44,7 @@ int		check_fill(char **map, int mpsize, tetri_list *list, int x, int y)
 	return (1);
 }
 
-void	only_dot_hash(char *s, int len)
+static void	only_dot_hash(char *s, int len)
 {
 	int		hash_count;
 	int		index;
@@ -52,9 +53,9 @@ void	only_dot_hash(char *s, int len)
 	index = 0;
 	while (index < len)
 	{
-		if ((!((index + 1) % 5) || index == len -1))
+		if ((!((index + 1) % 5) || index == len - 1))
 		{
-			if (s[index] && s[index]!= '\n')
+			if (s[index] && s[index] != '\n')
 				ft_exit("error");
 		}
 		else
@@ -70,7 +71,7 @@ void	only_dot_hash(char *s, int len)
 		ft_exit("error");
 }
 
-void	valid_tetri(char *s)
+static void	valid_tetri(char *s)
 {
 	int		touch_count;
 	int		i;
@@ -85,7 +86,7 @@ void	valid_tetri(char *s)
 				touch_count++;
 			if (i != 3 && i != 8 && i != 13 && i != 18)
 			{
-				if (i + 1 < BUFF_SIZE && s[i+1] == '#')
+				if (i + 1 < BUFF_SIZE && s[i + 1] == '#')
 					touch_count++;
 			}
 		}
@@ -95,31 +96,30 @@ void	valid_tetri(char *s)
 		ft_exit("not valid file");
 }
 
-tetri_list	*ft_readfile(char const *file_name)
+t_etrimino	*ft_readfile(char const *file_name)
 {
 	char		*buff;
 	int			fd;
 	char		**s;
 	int			nb_tetri;
-	tetri_list	*list;
+	t_etrimino	*list;
 
 	nb_tetri = 0;
 	list = NULL;
 	fd = open(file_name, O_RDONLY);
-	if(fd == -1)
+	if (fd == -1)
 		ft_exit("error");
-	if(!(buff = (char *)malloc(BUFF_SIZE)))
+	if (!(buff = (char *)malloc(BUFF_SIZE)))
 		return (NULL);
 	while (read(fd, buff, BUFF_SIZE))
 	{
 		if (nb_tetri > 25)
 			ft_exit("maxi tetri is 26");
-		only_dot_hash(buff,BUFF_SIZE);
+		only_dot_hash(buff, BUFF_SIZE);
 		valid_tetri(buff);
 		s = ft_strsplit((const char *)buff, '\n');
 		mv_left_top(s);
-		list = add_tetri(s, nb_tetri, list);
-		nb_tetri++;
+		list = add_tetri(s, nb_tetri++, list);
 		ft_bzero(buff, BUFF_SIZE);
 	}
 	return (list);

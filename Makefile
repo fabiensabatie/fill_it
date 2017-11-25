@@ -23,13 +23,11 @@ SRC_NAME =	fillit.c \
 			tetri.c \
 
 LIB_NAME = libft.a
-LIB_PATH = libft
 OBJ_NAME = $(SRC_NAME:.c=.o)
 
 SRC = $(addprefix $(SRC_PATH)/,$(SRC_NAME))
-LIB = $(addprefix $(INC_PATH)/,$(LIB_PATH))
-LIBGCC = $(addprefix $(LIB)/,$(LIB_NAME))
-CPPFLAGS = -Wall -Werror -Wextra -Iincludes
+LIB = $(addprefix $(INC_PATH)/,$(LIB_NAME))
+CPPFLAGS = -Wall -Werror -Wextra
 
 # Defining colors
 
@@ -39,7 +37,6 @@ ORANGE = \033[0;33m
 BLUE = \033[1;36m
 YELLOW = \033[1;33m
 PURPLE = \033[1;35m
-NC = \033[0m
 
 # Defining rules
 
@@ -47,12 +44,12 @@ all: $(NAME)
 
 $(NAME):
 	@echo "${GREEN}Compiling libft." | tr -d '\n'
-	@cd $(LIB) && make re
+	@cd $(INC_PATH) && make re
 	@echo " ${GREEN}Done."
 	@cd ../..
 	@echo "${GREEN}Compiling fillit." | tr -d '\n'
-	@gcc $(CPPFLAGS) -I$(INC_PATH) -c $(SRC)
-	@gcc $(CPPFLAGS) $(OBJ_NAME) $(LIBGCC) -o $(NAME)
+	@gcc $(CPPFLAGS) -c $(SRC)
+	@gcc $(CPPFLAGS) $(OBJ_NAME) $(LIB) -o $(NAME)
 	@echo " ${GREEN}Done."
 	@echo "${RED}A ${ORANGE}w${YELLOW}i${GREEN}l${BLUE}d \
 	${PURPLE}u${RED}n${ORANGE}i${YELLOW}c${GREEN}o${BLUE}r${PURPLE}n \
@@ -66,12 +63,12 @@ $(NAME):
 
 clean:
 	@rm -rf $(OBJ_NAME)
-	@cd $(LIB) && make clean
+	@cd $(INC_PATH) && make clean
 	@cd ../..
 
 fclean: clean
 	@rm -rf $(NAME)
-	@cd $(LIB) && make fclean
+	@cd $(INC_PATH) && make fclean
 	@cd ../..
 
 re: fclean all

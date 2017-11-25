@@ -13,39 +13,39 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "fill_it.h"
-#include "libft.h"
+#include "../includes/libft.h"
 
-int		mini_sq(tetri_list *list)
+int			mini_sq(t_etrimino *list)
 {
 	int			i;
-	tetri_list	*temp;
+	t_etrimino	*temp;
 
 	i = 1;
 	temp = list;
 	while (temp->next)
 		temp = temp->next;
-	while ( i * i < (temp->letter - 'A' + 1) * 4)
+	while (i * i < (temp->letter - 'A' + 1) * 4)
 		i++;
 	return (i);
 }
 
-tetri_map	*new_map(int size)
+t_map		*new_map(int size)
 {
 	int			i;
 	int			j;
-	tetri_map	*newmap;
+	t_map		*newmap;
 
 	i = -1;
-	if (!(newmap = (tetri_map *)malloc(sizeof(*newmap))))
+	if (!(newmap = (t_map*)malloc(sizeof(*newmap))))
 		return (NULL);
-	if(!(newmap->map = (char **)malloc(sizeof(char *) * size)))
+	if (!(newmap->map = (char**)malloc(sizeof(char*) * size)))
 		return (NULL);
 	while (++i < size)
 	{
-		if(!((newmap->map)[i] = (char *)malloc(sizeof(char) * size)))
+		if (!((newmap->map)[i] = (char*)malloc(sizeof(char) * size)))
 			return (NULL);
 		j = -1;
-		while(++j < size)
+		while (++j < size)
 			(newmap->map)[i][j] = '.';
 	}
 	newmap->size = size;
@@ -53,10 +53,13 @@ tetri_map	*new_map(int size)
 	return (newmap);
 }
 
-void	print_map(char **map, int size)
+void		print_map(char **map, int size)
 {
-	int i = 0;
-	int j = 0;
+	int i;
+	int j;
+
+	i = 0;
+	j = 0;
 	while (i < size)
 	{
 		j = 0;
@@ -70,11 +73,10 @@ void	print_map(char **map, int size)
 	}
 }
 
-
-void	fill_map(char **map, tetri_list *list)
+static void	fill_map(char **map, t_etrimino *list)
 {
-	int		i;
-	int		j;
+	int	i;
+	int	j;
 
 	i = -1;
 	while (++i < 4)
@@ -82,19 +84,18 @@ void	fill_map(char **map, tetri_list *list)
 		j = 0;
 		while (j < 4)
 		{
-			if((list->str)[i][j] == '#')
+			if ((list->str)[i][j] == '#')
 				map[list->x + i][list->y + j] = list->letter;
 			j++;
 		}
 	}
 }
 
-
-int		solve_map(tetri_map *map, tetri_list **list)
+int			solve_map(t_map *map, t_etrimino **list)
 {
 	if (*list)
 	{
-		if (!find_fit(map->map, map->size, *list))
+		if (!find_fit(map, *list))
 		{
 			(*list)->x = 0;
 			(*list)->y = 0;
