@@ -12,7 +12,7 @@
 
 #ifndef FILL_IT_H
 # define FILL_IT_H
-# define BUFF_SIZE 21
+# define BUFF_SIZE 20
 
 typedef	struct			s_etrimino
 {
@@ -32,13 +32,13 @@ typedef	struct			s_map
 }						t_map;
 
 void					ft_exit(char const *s);
-t_etrimino				*ft_readfile(char const *file_name);
+t_etrimino				*ft_readfile(int fd);
 t_map					*new_map(int size);
 void					print_tetri(unsigned short t);
 t_etrimino				*add_tetri(char **s, int nb, t_etrimino *old_list);
 void					remove_onete(char **map, int mpsize, t_etrimino *list);
 int						find_fit(t_map *map, t_etrimino *list);
-void					mv_left_top(char **s);
+char					**mv_left_top(char **s);
 int						check_fill(t_map *map, t_etrimino *list, int x, int y);
 void					ft_exit(char const *s);
 int						mini_sq(t_etrimino *list);

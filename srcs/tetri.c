@@ -113,7 +113,7 @@ static int		empty_col(char **s)
 	return (y);
 }
 
-void			mv_left_top(char **s)
+char			**mv_left_top(char **s)
 {
 	int		i;
 	int		j;
@@ -134,4 +134,5 @@ void			mv_left_top(char **s)
 				ft_swap(&s[i][j], &s[i - k][j - y]);
 		}
 	}
+	return (s);
 }

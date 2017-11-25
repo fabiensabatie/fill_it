@@ -12,6 +12,9 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <sys/types.h>
+#include <sys/uio.h>
+#include <sys/fcntl.h>
 #include "fill_it.h"
 #include "../includes/libft.h"
 
@@ -24,19 +27,20 @@ void	ft_exit(char const *s)
 int		main(int ac, char **av)
 {
 	t_etrimino	*list;
-	t_etrimino	**ptr_lst;
 	t_map		*n_map;
 	t_map		*temp;
+	int			fd;
 
 	if (ac != 2)
 		ft_exit("error");
-	list = ft_readfile(av[1]);
+	if (!(fd = open(av[1], O_RDONLY)))
+		ft_exit("error");
+	list = ft_readfile(fd);
 	n_map = new_map(mini_sq(list));
-	ptr_lst = &list;
-	while (!solve_map(n_map, ptr_lst))
+	while (!solve_map(n_map, &list))
 	{
-		if ((*ptr_lst)->letter != 'A')
-			*ptr_lst = (*ptr_lst)->pre;
+		if (list->letter != 'A')
+			list = list->pre;
 		else
 		{
 			temp = n_map;

@@ -12,9 +12,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/types.h>
-#include <sys/uio.h>
-#include <sys/fcntl.h>
 #include <unistd.h>
 #include <string.h>
 #include "../includes/libft.h"
@@ -71,7 +68,7 @@ static void	only_dot_hash(char *s, int len)
 		ft_exit("error");
 }
 
-static void	valid_tetri(char *s)
+static char	*valid_tetri(char *s)
 {
 	int		touch_count;
 	int		i;
@@ -93,34 +90,34 @@ static void	valid_tetri(char *s)
 		i++;
 	}
 	if (touch_count != 3 && touch_count != 4)
-		ft_exit("not valid file");
+		ft_exit("error");
+	return (s);
 }
 
-t_etrimino	*ft_readfile(char const *file_name)
+t_etrimino	*ft_readfile(int fd)
 {
 	char		*buff;
-	int			fd;
 	char		**s;
 	int			nb_tetri;
 	t_etrimino	*list;
+	int			test_n;
 
 	nb_tetri = 0;
 	list = NULL;
-	fd = open(file_name, O_RDONLY);
-	if (fd == -1)
-		ft_exit("error");
-	if (!(buff = (char *)malloc(BUFF_SIZE)))
+	test_n = 0;
+	if (!(buff = (char*)malloc(BUFF_SIZE)))
 		return (NULL);
 	while (read(fd, buff, BUFF_SIZE))
 	{
 		if (nb_tetri > 25)
-			ft_exit("maxi tetri is 26");
-		only_dot_hash(buff, BUFF_SIZE);
-		valid_tetri(buff);
+			ft_exit("error");
+		only_dot_hash(valid_tetri(buff), BUFF_SIZE);
 		s = ft_strsplit((const char *)buff, '\n');
-		mv_left_top(s);
-		list = add_tetri(s, nb_tetri++, list);
+		list = add_tetri(mv_left_top(s), nb_tetri++, list);
+		test_n = read(fd, buff, 1);
 		ft_bzero(buff, BUFF_SIZE);
 	}
+	if (nb_tetri == 0 || test_n == 1)
+		ft_exit("error");
 	return (list);
 }
